@@ -1,0 +1,148 @@
+package org.firstinspires.ftc.teamcode;
+
+import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
+import com.qualcomm.robotcore.hardware.CRServo;
+import com.qualcomm.robotcore.hardware.Servo;
+import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
+import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.util.ElapsedTime;
+import com.qualcomm.robotcore.util.Range;
+
+@TeleOp(name = "HolonmoicTeleopCode", group = "Concept")
+public class HolonomicDriveTrainV2 extends LinearOpMode {
+
+    // Declare OpMode members.
+    private ElapsedTime runtime = new ElapsedTime();
+    private DcMotor frontleftmotor = null;
+    private DcMotor frontrightmotor = null;
+    private DcMotor backleftmotor = null;
+    private DcMotor backrightmotor = null;
+    private Servo oneServo = null;
+    private Servo twoServo =null;
+    double servo1pos;
+    double servo2pos;
+    //private DcMotor oneMotor = null;
+    private DcMotor twoMotor = null;
+    private DcMotor leftArm = null;
+    private DcMotor rightArm = null;
+    private DcMotor pickerArm = null;
+    private CRServo intake = null;
+    
+    @Override
+    public void runOpMode() {
+        telemetry.addData("Status", "Initialized");
+        telemetry.update();
+
+        // Initialize the hardware variables. Note that the strings used here as parameters
+        // to 'get' must correspond to the names assigned during the robot configuration
+        // step (using the FTC Robot Controller app on the phone).
+        //oneMotor  = hardwareMap.get(DcMotor.class, "oneMotor");
+        twoMotor = hardwareMap.get(DcMotor.class, "twoMotor");
+        leftArm = hardwareMap.get(DcMotor.class, "leftArm");
+        rightArm = hardwareMap.get(DcMotor.class, "rightArm");
+        frontleftmotor = hardwareMap.get(DcMotor.class, "frontleftmotor");
+        frontrightmotor = hardwareMap.get(DcMotor.class, "frontrightmotor");
+        backrightmotor = hardwareMap.get(DcMotor.class, "backrightmotor");
+        backleftmotor = hardwareMap.get(DcMotor.class, "backleftmotor");
+        pickerArm = hardwareMap.get(DcMotor.class,"inputArm");
+        intake = hardwareMap.get(CRServo.class, "input" );
+        oneServo = hardwareMap.get(Servo.class,"oneServo");
+        twoServo = hardwareMap.get(Servo.class,"twoServo");
+        oneServo.setPosition(0.0);
+        twoServo.setPosition(0.0);
+        //oneMotor.setPower(0.0);
+        twoMotor.setPower(0.0);
+        leftArm.setPower(0.0);
+        rightArm.setPower(0.0);
+        frontleftmotor.setPower(0.0);
+        frontrightmotor.setPower(0.0);
+        backleftmotor.setPower(0.0);
+        backrightmotor.setPower(0.0);
+        
+        frontleftmotor.setDirection(DcMotor.Direction.REVERSE);
+        backleftmotor.setDirection(DcMotor.Direction.REVERSE);
+
+        // Wait for the game to start (driver presses PLAY)
+        waitForStart();
+        runtime.reset();
+
+        // run until the end of the match (driver presses STOP)
+        while (opModeIsActive()) {
+
+            // Setup a variable for each drive wheel to save power level for telemetry
+            double frontleftPower;
+            double frontrightPower;
+            double backleftPower;
+            double backrightPower;
+            double oneMotorPower;
+            double twoMotorPower;
+            double intakeArmPower;
+            double intakePower;
+            double leftArmPower;
+            double rightArmPower;
+            // left stick controls direction
+        // right stick X controls rotation
+
+        //float gamepad1LeftY = -gamepad1.left_stick_y;
+        //float gamepad1LeftX = gamepad1.left_stick_x;
+        //float gamepad1RightX = gamepad1.right_stick_x;
+        //float gamepad1RightY = -gamepad1.right_stick_y;
+        
+        //formulas for holonomic drive
+        
+        frontleftPower =  -gamepad1.left_stick_y;
+        frontrightPower = -gamepad1.right_stick_y;
+        backrightPower = -gamepad1.right_stick_y;
+        backleftPower = -gamepad1.left_stick_y;
+        leftArmPower = gamepad1.right_trigger;
+        rightArmPower = gamepad1.left_trigger;
+        intakePower = gamepad2.right_stick_y;
+        intakeArmPower = gamepad2.left_stick_y;
+        frontrightPower= gamepad1.right_stick_x;
+        backleftPower= gamepad1.right_stick_x;
+        //float leftArm = gamepad1.
+
+            // Choose to drive using either Tank Mode, or POV Mode
+            // Comment out the method that's not used.  The default below is POV.
+
+            // POV Mode uses left stick to go forward, and right stick to turn.
+            // - This uses basic math to combine motions and is easier to drive straight.
+            //double drive = gamepad1.left_stick_y;
+            //double turn  =  gamepad1.right_stick_x;
+            //leftPower    = Range.clip(drive + turn, -1.0, 1.0) ;
+            //rightPower   = Range.clip(drive - turn, -1.0, 1.0) ;
+            frontleftmotor.setPower(frontleftPower);
+            frontrightmotor.setPower(frontrightPower);
+            backrightmotor.setPower(backrightPower);
+            backleftmotor.setPower(backleftPower);
+            //oneMotor.setPower(oneMotorPower);
+            leftArm.setPower(leftArmPower);
+            rightArm.setPower(rightArmPower);
+            
+            intake.setPower(intakePower);
+            pickerArm.setPower(intakeArmPower);
+            
+            //for values not to exceed -1 or 1
+            //frontleftmotor = Range.clip(frontleftmotor, -1,1);
+            //frontrightmotor = Range.clip(frontrightmotor, -1,1);
+            //backleftmotor = Range.clip(backleftmotor, -1,1);
+            //backrightmotor = Range.clip(backrightmotor, -1,1);
+            
+
+            // Tank Mode uses one stick to control each wheel.
+            // - This requires no math, but it is hard to drive forward slowly and keep straight.
+            // leftPower  = -gamepad1.left_stick_y ;
+            // rightPower = -gamepad1.right_stick_y ;
+
+            // Send calculated power to wheels
+            //leftDrive.setPower(leftPower);
+            //rightDrive.setPower(rightPower);
+
+            // Show the elapsed game time and wheel power.
+            telemetry.addData("Status", "Run Time: " + runtime.toString());
+            //telemetry.addData("Motors", "left (%.2f), right (%.2f)", leftPower, rightPower);
+            telemetry.update();
+        }
+    }
+}
